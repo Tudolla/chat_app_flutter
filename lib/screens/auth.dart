@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enterPass = '';
   File? _image;
   var _isLoading = false;
+  var _enterName = '';
 
   void _submit() async {
     final isSubmit = _formKey.currentState!.validate();
@@ -49,6 +51,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
         await storageRef.putFile(_image!);
         final imageURL = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance.collection('user_list')
+        .doc(userCridential.user!.uid)
+        .set({
+          'username' : _enterName,
+          'email' : _enterEmail,
+          'image_url': imageURL,
+        });
       }
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {}
@@ -110,6 +120,27 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _image = avatarImage;
                               },
                             ),
+                          if(!_isLogin)
+                            TextFormField(
+                            decoration: const InputDecoration(
+                              label: Text('Điền họ và tên'),
+                              
+                              
+
+                            ),
+                            enableSuggestions: false,
+                            validator: (value) {
+                              if(value!.isEmpty || value == null || value.trim().length <= 4){
+                                return 'Name at least 4 charater';
+                              }
+                              return null;
+                            },
+                            onSaved: (value){
+                              _enterName = value!;
+                            },
+                            ),
+                            
+                          
                           TextFormField(
                             decoration: const InputDecoration(
                               label: Text('Tài khoản Gmail'),
@@ -129,9 +160,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               _enterEmail = value!;
                             },
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          
                           TextFormField(
                             decoration: const InputDecoration(
                               label: Text('Mật khẩu chỗ này'),

@@ -50,7 +50,7 @@ class _UserImagePickerState extends State<UserImagePicker>{
         
         TextButton.icon(onPressed: _selectImage, 
         icon: Icon(Icons.image),
-        label: Text('Add image', style: TextStyle(color: Theme.of(context).colorScheme.primary,),),),
+        label: Text('Nhớ thêm ảnh!', style: TextStyle(color: Theme.of(context).colorScheme.primary,),),),
       ],
     );
   }

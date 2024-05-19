@@ -1,4 +1,6 @@
 
+import 'package:chat_app/widgets/chat_messenger.dart';
+import 'package:chat_app/widgets/new_messenger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +26,14 @@ class _ChatScreenState extends State<ChatScreen> {
           }, icon: Icon(Icons.logout_outlined))
         ],
       ),
-      body: Center(
-        child: Text('ok'),
-      ),
+      body:const  Column(
+        children: [
+          Expanded(
+            child: ChatMessenger(),
+            ),
+          NewMessenger(),
+        ],
+      )
     );
   }
 }
